@@ -1,67 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>thứ trong tuần</title>
-
-    <style>
-        body{
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>THỨ TRONG TUẦN</title>
+	<style type="text/css">
+		body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 50vh;
+            height: 100vh;
+            margin: 0;
         }
-        .contain{
-           
+        .form {
             border: 1px solid black;
+            width: 700px;
             height: auto;
-            width: 500px;
-            background-color: #ffcccc;
-            padding: 0px 10px 30px 10px;
-        }
-        .head{
             text-align: center;
-           background-color: #fb88c2;
         }
-        .giua{
-            display: flex;
-            justify-content: center;          
+        .title {
+            margin: 10px 0px;
+            background-color: bisque;
         }
-        .text{
-            width: 50px;
-            margin: 0px 10px 0px 10px;
+        .table {
+            width: 100%;
+            background-color: beige;
         }
-        .bottom{
-            margin-top: 10px;
-            display: flex;
-            justify-content: center; 
+        .rows th, .rows td {
+            padding: 8px;
         }
-
-    </style>
+        .col {
+            text-align: left;
+            width: 150px;
+        }
+        .ngay{
+    		width: 50px;
+        }
+        .thang{
+    		width: 50px;
+        }
+        .nam{
+    		width: 50px;
+        }
+        .input-data {
+            width: 100%;
+            margin: 20px;
+        }
+        #input-color{
+            background-color: #FDA7DF;
+            text-align: center;
+            margin-left: 140px;
+        }
+	</style>
 </head>
 <body>
-    <form action=""method="post" class="contain" >
+	<?php
+		$ngay = date('d');
+		$thang = date('m');
+		$nam = date('Y');
+		$timngay = "";
 
-     
-            <div class ="head">
-                <h1>Tìm Thứ Trong Tuần</h1>
-            </div>
-            <div class="giua">
-                Ngày/Tháng/Năm: 
-                <input type="text" class="text" name="ngay" min="1" max="31" required>/
-                <input type="text" class="text"name="thang" min="1" max="12" required>/
-                <input type="text" class="text" name="nam" min="1900"required >
-                <input type="submit" value="Tìm thứ trong tuần">
-                   
-            </div>
-            <div class="bottom">
-            <input type="text" name="hienthi" readonly style="width: 60%;">
+		if($_SERVER["REQUEST_METHOD"] == "POST"){
+			$ngay = $_POST['ngay'];
+			$thang = $_POST['thang'];
+			$nam = $_POST['nam'];
 
-            </div>
-       
+			if (checkdate($thang, $ngay, $nam)) {
+				$time = mktime(0, 0, 0, $thang, $ngay, $nam);
+				$thu = date('w', $time);
 
-    </form>
-    
+				switch($thu) {
+					case 0: $timngay = "Chủ nhật"; break;
+					case 1: $timngay = "Thứ hai"; break;
+					case 2: $timngay = "Thứ ba"; break;
+					case 3: $timngay = "Thứ tư"; break;
+					case 4: $timngay = "Thứ năm"; break;
+					case 5: $timngay = "Thứ sáu"; break;
+					case 6: $timngay = "Thứ bảy"; break;
+					default: $timngay = "Không xác định"; break;
+				}
+			} else{
+				$timngay = "Không hợp lệ";
+			}
+			
+		}
+	?>
+	<form method="POST" action="" class="form">
+		<h2 class="title">Tìm thứ trong tuần</h2>
+		<table class="table">
+			<tr class="rows">
+				<th class="col">Ngày/ tháng/ năm:</th>
+				<td><input type="number" name="ngay" class="input ngay" min="1" max="31" value="<?php echo $ngay ?>"></td>
+				<td><label>/</label></td>
+				<td><input type="number" name="thang" class="input thang" min="1" max="12" value="<?php echo $thang ?>"></td>
+				<td><label>/</label></td>	
+				<td><input type="number" name="nam" class="input nam" value="<?php echo $nam ?>"></td>
+				<td><input type="submit" name="submit" class="submit" value="Tìm thứ trong tuần"></td>
+			</tr>
+			<tr class="rows">
+				<td colspan="4">
+					<input type="text" name="timngay" id="input-color" class="input-data" 
+                           value="<?php echo !empty($timngay) ? "Ngày $ngay Tháng $thang Năm $nam $timngay" : '' ?>" readonly>
+                </td>
+			</tr>
+		</table>
+	</form>
 </body>
 </html>
